@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
-import Footer from "../sections/Shared/footer/Footer";
-import Navbar from "../sections/Shared/navbar/Navbar";
+import ConditionalLayout from "../components/common/ConditionalLayout";
 import "./globals.css";
 
 const urbanist = Urbanist({
@@ -30,9 +29,7 @@ const RootLayout = ({
         suppressHydrationWarning
         data-theme="light"
       >
-        <Navbar />
-        {children}
-        <Footer />
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   );
