@@ -130,22 +130,22 @@ const EarningsChart = () => {
           />
 
           {/* Tooltip */}
-          <g transform={`translate(${getX(8) + 20}, ${getY(137) + 20})`}>
+          <g transform={`translate(${getX(8) + 20}, ${getY(180) + 20})`}>
             <rect
               x={-60}
-              y={-70}
+              y={-50}
               width={120}
               height={50}
               fill="#1e40af"
               rx={4}
             />
-            <text x={0} y={-50} textAnchor="middle" className="text-xs fill-white font-medium">
+            <text x={0} y={-30} textAnchor="middle" className="text-xs fill-white font-medium">
               ৳137.000
             </text>
-            <text x={0} y={-35} textAnchor="middle" className="text-xs fill-white font-medium">
+            <text x={0} y={-15} textAnchor="middle" className="text-xs fill-white font-medium">
               ৳100.000
             </text>
-            <text x={0} y={-20} textAnchor="middle" className="text-xs fill-white">
+            <text x={0} y={0} textAnchor="middle" className="text-xs fill-white">
               20th september 2024
             </text>
           </g>
