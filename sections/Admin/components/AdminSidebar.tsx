@@ -4,9 +4,10 @@ import { ReactElement, useState } from "react";
 
 interface AdminSidebarProps {
   sidebarOpen: boolean;
+  setSidebarOpen?: (open: boolean) => void;
 }
 
-const AdminSidebar = ({ sidebarOpen }: AdminSidebarProps) => {
+const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: AdminSidebarProps) => {
   const [activeItem, setActiveItem] = useState("Overview");
 
   const menuItems = [
@@ -204,97 +205,41 @@ const AdminSidebar = ({ sidebarOpen }: AdminSidebarProps) => {
   };
 
   return (
-    <aside
-      className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 transition-all duration-300 z-30 flex flex-col ${
-        sidebarOpen ? "w-64" : "w-20"
-      }`}
-    >
-      <div className="p-4 flex-shrink-0">
-        <div className="flex items-center space-x-1 mb-2 ml-3">
-          <div className="w-8 h-8  rounded flex items-center justify-center flex-shrink-0">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+    <>
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          onClick={() => setSidebarOpen?.(false)}
+        />
+      )}
+      <aside
+        className={`fixed left-0 top-32 h-[calc(100vh-9rem)] bg-white border-r border-gray-200 transition-all duration-300 z-30 flex flex-col pt-6 ${
+          sidebarOpen
+            ? "w-64 translate-x-0"
+            : "w-20 lg:translate-x-0 -translate-x-full"
+        }`}
+      >
+        <nav className="flex-1 overflow-y-auto px-4 pb-4 space-y-1">
+          {menuItems.map((item) => (
+            <button
+              key={item.name}
+              onClick={() => setActiveItem(item.name)}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                activeItem === item.name
+                  ? "bg-blue-100 text-blue-800 font-bold"
+                  : "text-gray-700 hover:bg-gray-100 font-bold"
+              }`}
             >
-              <path
-                d="M6 22V4C6 3.46957 6.21071 2.96086 6.58579 2.58579C6.96086 2.21071 7.46957 2 8 2H16C16.5304 2 17.0391 2.21071 17.4142 2.58579C17.7893 2.96086 18 3.46957 18 4V22H6Z"
-                stroke="#155DFC"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M6 12H4C3.46957 12 2.96086 12.2107 2.58579 12.5858C2.21071 12.9609 2 13.4696 2 14V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H6"
-                stroke="#155DFC"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M18 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V20C22 20.5304 21.7893 21.0391 21.4142 21.4142C21.0391 21.7893 20.5304 22 20 22H18"
-                stroke="#155DFC"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M10 6H14"
-                stroke="#155DFC"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M10 10H14"
-                stroke="#155DFC"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M10 14H14"
-                stroke="#155DFC"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M10 18H14"
-                stroke="#155DFC"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          {sidebarOpen && (
-            <h2 className="text-xl font-bold text-gray-800">EduDashboard</h2>
-          )}
-        </div>
-      </div>
-
-      <nav className="flex-1 overflow-y-auto px-4 pb-4 space-y-1">
-        {menuItems.map((item) => (
-          <button
-            key={item.name}
-            onClick={() => setActiveItem(item.name)}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-              activeItem === item.name
-                ? "bg-blue-100 text-blue-800 font-bold"
-                : "text-gray-700 hover:bg-gray-100 font-bold"
-            }`}
-          >
-            <span className="flex-shrink-0">{getIcon(item.icon)}</span>
-            {sidebarOpen && (
-              <span className="text-sm font-medium">{item.name}</span>
-            )}
-          </button>
-        ))}
-      </nav>
-    </aside>
+              <span className="flex-shrink-0">{getIcon(item.icon)}</span>
+              {sidebarOpen && (
+                <span className="text-sm font-medium">{item.name}</span>
+              )}
+            </button>
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 };
 

@@ -7,12 +7,13 @@ import Footer from "../../sections/Shared/footer/Footer";
 const ConditionalLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
+  const isSuperHeroRoute = pathname?.startsWith("/super-hero");
 
   return (
     <>
-      {!isAdminRoute && <Navbar />}
+      {!isAdminRoute && !isSuperHeroRoute && <Navbar />}
       {children}
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isSuperHeroRoute && <Footer />}
     </>
   );
 };

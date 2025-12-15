@@ -9,7 +9,7 @@ const DashboardOverview = () => {
       trend: "up",
       icon: (
         <svg
-          className="w-6 h-6"
+          className="w-5 h-5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -30,7 +30,7 @@ const DashboardOverview = () => {
       trend: "up",
       icon: (
         <svg
-          className="w-6 h-6"
+          className="w-5 h-5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -57,7 +57,7 @@ const DashboardOverview = () => {
       trend: "up",
       icon: (
         <svg
-          className="w-6 h-6"
+          className="w-5 h-5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -78,7 +78,7 @@ const DashboardOverview = () => {
       trend: "up",
       icon: (
         <svg
-          className="w-6 h-6"
+          className="w-5 h-5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -95,47 +95,39 @@ const DashboardOverview = () => {
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
-        <p className="text-gray-600 mt-1 font-medium">
+    <div className="bg-white rounded-lg shadow-sm p-4 sm:p-5 md:p-6">
+      <div className="mb-4 md:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+          Dashboard Overview
+        </h1>
+        <p className="text-sm sm:text-base text-gray-600 mt-1 font-medium">
           Welcome to your educational institutions management dashboard
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
         {metrics.map((metric, index) => (
           <div
             key={index}
-            className="bg-gradient-to-br from-white to-gray-50 rounded-lg p-6 border border-gray-200 hover:shadow-md transition-shadow"
+            className="bg-white rounded-lg p-4 sm:p-5 md:p-6 border border-gray-200 hover:shadow-md transition-shadow relative"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
-                {metric.icon}
-              </div>
-              <div
-                className={`flex items-center text-green-600 text-sm font-medium`}
-              >
-                <svg
-                  className="w-4 h-4 mr-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 10l7-7m0 0l7 7m-7-7v18"
-                  />
-                </svg>
-              </div>
+            {/* Icon in top right corner */}
+            <div className="absolute top-4 right-4 text-gray-400">
+              {metric.icon}
             </div>
-            <h3 className="text-gray-600 text-sm mb-1">{metric.title}</h3>
-            <p className="text-2xl font-bold text-gray-800 mb-2">
+
+            {/* Title at top */}
+            <h3 className="text-sm font-medium text-gray-900 mb-2 pr-8">
+              {metric.title}
+            </h3>
+
+            {/* Value in middle */}
+            <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
               {metric.value}
             </p>
-            <p className="text-green-600 text-sm font-medium flex items-center">
+
+            {/* Trend at bottom */}
+            <p className="text-sm font-medium text-green-600 flex items-center">
               <svg
                 className="w-3 h-3 mr-1"
                 fill="none"

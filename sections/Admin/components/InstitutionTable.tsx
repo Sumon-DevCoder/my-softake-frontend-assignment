@@ -58,37 +58,64 @@ const InstitutionTable = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <h2 className="text-xl font-bold text-gray-800 mb-6">Institution Overview</h2>
-      
-      <div className="overflow-x-auto">
-        <table className="w-full">
+    <div className="bg-white rounded-lg shadow-sm p-4 sm:p-5 md:p-6">
+      <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 md:mb-6">
+        Institution Overview
+      </h2>
+
+      <div className="overflow-x-auto -mx-4 sm:-mx-5 md:-mx-6 px-4 sm:px-5 md:px-6">
+        <table className="w-full min-w-[600px]">
           <thead>
             <tr className="border-b border-gray-200">
-              <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Institution</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Type</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Students</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Staff</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Revenue</th>
-              <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Status</th>
+              <th className="text-left py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-700">
+                Institution
+              </th>
+              <th className="text-left py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-700">
+                Type
+              </th>
+              <th className="text-left py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-700">
+                Students
+              </th>
+              <th className="text-left py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-700">
+                Staff
+              </th>
+              <th className="text-left py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-700">
+                Revenue
+              </th>
+              <th className="text-left py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-700">
+                Status
+              </th>
             </tr>
           </thead>
           <tbody>
             {institutions.map((institution, index) => (
-              <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                <td className="py-4 px-4 text-sm text-gray-800 font-medium">
+              <tr
+                key={index}
+                className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+              >
+                <td className="py-3 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm text-gray-800 font-medium">
                   {institution.name}
                 </td>
-                <td className="py-4 px-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getTypeColor(institution.type)}`}>
+                <td className="py-3 sm:py-4 px-2 sm:px-4">
+                  <span
+                    className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${getTypeColor(
+                      institution.type
+                    )}`}
+                  >
                     {institution.type}
                   </span>
                 </td>
-                <td className="py-4 px-4 text-sm text-gray-700">{institution.students}</td>
-                <td className="py-4 px-4 text-sm text-gray-700">{institution.staff}</td>
-                <td className="py-4 px-4 text-sm text-gray-700 font-medium">{institution.revenue}</td>
-                <td className="py-4 px-4">
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                <td className="py-3 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm text-gray-700">
+                  {institution.students}
+                </td>
+                <td className="py-3 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm text-gray-700">
+                  {institution.staff}
+                </td>
+                <td className="py-3 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm text-gray-700 font-medium">
+                  {institution.revenue}
+                </td>
+                <td className="py-3 sm:py-4 px-2 sm:px-4">
+                  <span className="px-2 sm:px-3 py-1 bg-transparent border border-green-600 text-green-600 rounded-lg text-xs font-medium">
                     {institution.status}
                   </span>
                 </td>
@@ -102,4 +129,3 @@ const InstitutionTable = () => {
 };
 
 export default InstitutionTable;
-

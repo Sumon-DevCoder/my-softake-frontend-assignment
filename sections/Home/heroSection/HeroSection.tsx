@@ -1,20 +1,28 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HeroSlide, heroSlides } from "./heroData";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [prevCarouselIndex, setPrevCarouselIndex] = useState(0);
   const [prevSlide, setPrevSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isCarouselSliding, setIsCarouselSliding] = useState(false);
+  const carouselIndexRef = useRef(0);
 
   const totalSlides = heroSlides.length;
   const currentSlideData: HeroSlide = heroSlides[currentSlide];
   const prevSlideData: HeroSlide = heroSlides[prevSlide];
 
-  // Inject Ken Burns animation keyframes
+  // Sync ref with state
+  useEffect(() => {
+    carouselIndexRef.current = carouselIndex;
+  }, [carouselIndex]);
+
+  // Inject Ken Burns animation keyframes and slider animation
   useEffect(() => {
     const styleId = "ken-burns-animation";
     if (!document.getElementById(styleId)) {
@@ -32,6 +40,42 @@ const HeroSection = () => {
             transform: scale(1);
           }
         }
+        @keyframes slideOutLeft {
+          0% {
+            transform: translateX(0) scale(1.05);
+            opacity: 1;
+          }
+          30% {
+            transform: translateX(-40%) scale(0.98);
+            opacity: 0.8;
+          }
+          70% {
+            transform: translateX(-80%) scale(0.92);
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateX(-150%) scale(0.85);
+            opacity: 0;
+          }
+        }
+        @keyframes slideInRight {
+          0% {
+            transform: translateX(150%) scale(0.85);
+            opacity: 0;
+          }
+          30% {
+            transform: translateX(80%) scale(0.92);
+            opacity: 0.3;
+          }
+          70% {
+            transform: translateX(40%) scale(0.98);
+            opacity: 0.8;
+          }
+          100% {
+            transform: translateX(0) scale(1.05);
+            opacity: 1;
+          }
+        }
       `;
       document.head.appendChild(style);
     }
@@ -43,14 +87,35 @@ const HeroSection = () => {
     };
   }, []);
 
-  // Auto-slide functionality
+  // Auto-slide functionality - changes both background and carousel images together
   useEffect(() => {
     const interval = setInterval(() => {
+      const nextSlide = (currentSlide + 1) % totalSlides;
+      const nextSlideData = heroSlides[nextSlide];
+
       setPrevSlide(currentSlide);
       setIsTransitioning(true);
-      const nextSlide = (currentSlide + 1) % totalSlides;
+
+      // Change carousel image with animation when slide changes
+      // Reset to 0 for new slide, but with sliding animation
+      if (nextSlideData.carouselImages.length > 1) {
+        const currentIdx = carouselIndexRef.current;
+        setPrevCarouselIndex(currentIdx);
+        setIsCarouselSliding(true);
+        // Reset to 0 for new slide with animation
+        carouselIndexRef.current = 0;
+        setCarouselIndex(0);
+        setTimeout(() => {
+          setIsCarouselSliding(false);
+        }, 900);
+      } else {
+        carouselIndexRef.current = 0;
+        setCarouselIndex(0);
+        setPrevCarouselIndex(0);
+      }
+
       setCurrentSlide(nextSlide);
-      setCarouselIndex(0);
+
       setTimeout(() => {
         setIsTransitioning(false);
         setPrevSlide(nextSlide);
@@ -64,21 +129,61 @@ const HeroSection = () => {
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
+        const nextSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        const nextSlideData = heroSlides[nextSlide];
+
         setPrevSlide(currentSlide);
         setIsTransitioning(true);
-        const nextSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+
+        // Change carousel image with animation when slide changes
+        // Reset to 0 for new slide, but with sliding animation
+        if (nextSlideData.carouselImages.length > 1) {
+          const currentIdx = carouselIndexRef.current;
+          setPrevCarouselIndex(currentIdx);
+          setIsCarouselSliding(true);
+          // Reset to 0 for new slide with animation
+          carouselIndexRef.current = 0;
+          setCarouselIndex(0);
+          setTimeout(() => {
+            setIsCarouselSliding(false);
+          }, 600);
+        } else {
+          carouselIndexRef.current = 0;
+          setCarouselIndex(0);
+          setPrevCarouselIndex(0);
+        }
+
         setCurrentSlide(nextSlide);
-        setCarouselIndex(0);
         setTimeout(() => {
           setIsTransitioning(false);
           setPrevSlide(nextSlide);
         }, 1500);
       } else if (e.key === "ArrowRight") {
+        const nextSlide = (currentSlide + 1) % totalSlides;
+        const nextSlideData = heroSlides[nextSlide];
+
         setPrevSlide(currentSlide);
         setIsTransitioning(true);
-        const nextSlide = (currentSlide + 1) % totalSlides;
+
+        // Change carousel image with animation when slide changes
+        // Reset to 0 for new slide, but with sliding animation
+        if (nextSlideData.carouselImages.length > 1) {
+          const currentIdx = carouselIndexRef.current;
+          setPrevCarouselIndex(currentIdx);
+          setIsCarouselSliding(true);
+          // Reset to 0 for new slide with animation
+          carouselIndexRef.current = 0;
+          setCarouselIndex(0);
+          setTimeout(() => {
+            setIsCarouselSliding(false);
+          }, 600);
+        } else {
+          carouselIndexRef.current = 0;
+          setCarouselIndex(0);
+          setPrevCarouselIndex(0);
+        }
+
         setCurrentSlide(nextSlide);
-        setCarouselIndex(0);
         setTimeout(() => {
           setIsTransitioning(false);
           setPrevSlide(nextSlide);
@@ -91,25 +196,56 @@ const HeroSection = () => {
   }, [totalSlides, currentSlide]);
 
   const nextCarouselImage = () => {
-    setCarouselIndex(
-      (prev) => (prev + 1) % currentSlideData.carouselImages.length
-    );
+    setPrevCarouselIndex(carouselIndexRef.current);
+    setIsCarouselSliding(true);
+    const nextIdx =
+      (carouselIndexRef.current + 1) % currentSlideData.carouselImages.length;
+    carouselIndexRef.current = nextIdx;
+    setCarouselIndex(nextIdx);
+    setTimeout(() => {
+      setIsCarouselSliding(false);
+    }, 600);
   };
 
   const prevCarouselImage = () => {
-    setCarouselIndex(
-      (prev) =>
-        (prev - 1 + currentSlideData.carouselImages.length) %
-        currentSlideData.carouselImages.length
-    );
+    setPrevCarouselIndex(carouselIndexRef.current);
+    setIsCarouselSliding(true);
+    const nextIdx =
+      (carouselIndexRef.current - 1 + currentSlideData.carouselImages.length) %
+      currentSlideData.carouselImages.length;
+    carouselIndexRef.current = nextIdx;
+    setCarouselIndex(nextIdx);
+    setTimeout(() => {
+      setIsCarouselSliding(false);
+    }, 600);
   };
 
   const goToNextSlide = () => {
+    const nextSlideIndex = (currentSlide + 1) % totalSlides;
+    const nextSlideData = heroSlides[nextSlideIndex];
+
     setPrevSlide(currentSlide);
     setIsTransitioning(true);
-    const nextSlideIndex = (currentSlide + 1) % totalSlides;
+
+    // Change carousel image with animation when slide changes
+    // Reset to 0 for new slide, but with sliding animation
+    if (nextSlideData.carouselImages.length > 1) {
+      const currentIdx = carouselIndexRef.current;
+      setPrevCarouselIndex(currentIdx);
+      setIsCarouselSliding(true);
+      // Reset to 0 for new slide with animation
+      carouselIndexRef.current = 0;
+      setCarouselIndex(0);
+      setTimeout(() => {
+        setIsCarouselSliding(false);
+      }, 600);
+    } else {
+      carouselIndexRef.current = 0;
+      setCarouselIndex(0);
+      setPrevCarouselIndex(0);
+    }
+
     setCurrentSlide(nextSlideIndex);
-    setCarouselIndex(0);
     setTimeout(() => {
       setIsTransitioning(false);
       setPrevSlide(nextSlideIndex);
@@ -117,11 +253,31 @@ const HeroSection = () => {
   };
 
   const goToPrevSlide = () => {
+    const nextSlideIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+    const nextSlideData = heroSlides[nextSlideIndex];
+
     setPrevSlide(currentSlide);
     setIsTransitioning(true);
-    const nextSlideIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+
+    // Change carousel image with animation when slide changes
+    // Reset to 0 for new slide, but with sliding animation
+    if (nextSlideData.carouselImages.length > 1) {
+      const currentIdx = carouselIndexRef.current;
+      setPrevCarouselIndex(currentIdx);
+      setIsCarouselSliding(true);
+      // Reset to 0 for new slide with animation
+      carouselIndexRef.current = 0;
+      setCarouselIndex(0);
+      setTimeout(() => {
+        setIsCarouselSliding(false);
+      }, 600);
+    } else {
+      carouselIndexRef.current = 0;
+      setCarouselIndex(0);
+      setPrevCarouselIndex(0);
+    }
+
     setCurrentSlide(nextSlideIndex);
-    setCarouselIndex(0);
     setTimeout(() => {
       setIsTransitioning(false);
       setPrevSlide(nextSlideIndex);
@@ -182,7 +338,7 @@ const HeroSection = () => {
       )}
 
       {/* Main Content */}
-      <div className="relative z-10 h-full flex flex-col">
+      <div className="relative z-10 h-[90vh] flex flex-col">
         {/* Hero Content */}
         <div className="flex-1 flex items-center container mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-20 sm:pb-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 w-full items-center">
@@ -202,36 +358,69 @@ const HeroSection = () => {
             </div>
 
             {/* Right Side - Carousel Images */}
-            <div className="hidden lg:block relative z-20">
-              <div className="flex gap-4 justify-end">
-                {currentSlideData.carouselImages.map((img, idx) => (
-                  <div
-                    key={idx}
-                    className={`relative w-[280px] xl:w-[340px] h-48 xl:h-60 rounded-lg overflow-hidden shadow-2xl transition-all duration-500 ${
-                      idx === carouselIndex
-                        ? "transform scale-105 z-10"
-                        : "transform scale-105 opacity-80"
-                    }`}
-                    style={{
-                      marginLeft: idx > 0 ? "16px" : "0",
-                    }}
-                  >
-                    <Image
-                      src={img}
-                      alt={`Carousel ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
-                  </div>
-                ))}
+            <div
+              className="hidden lg:block relative z-20"
+              style={{ overflow: "visible" }}
+            >
+              <div
+                className="flex gap-4 justify-end relative"
+                style={{ overflow: "visible" }}
+              >
+                {currentSlideData.carouselImages.map((img, idx) => {
+                  const isActive = idx === carouselIndex;
+                  const wasPrevActive = idx === prevCarouselIndex;
+                  const isSlidingOut =
+                    wasPrevActive && !isActive && isCarouselSliding;
+                  const isSlidingIn =
+                    isActive && isCarouselSliding && wasPrevActive !== isActive;
+
+                  return (
+                    <div
+                      key={`${currentSlide}-${idx}`}
+                      className={`relative w-[280px] xl:w-[340px] h-48 xl:h-60 rounded-lg overflow-hidden shadow-2xl ${
+                        isSlidingOut
+                          ? "z-0"
+                          : isSlidingIn
+                          ? "z-10"
+                          : isActive
+                          ? "transform scale-105 z-10 opacity-100 transition-all duration-500"
+                          : "transform scale-105 opacity-80 transition-all duration-500 z-0"
+                      }`}
+                      style={{
+                        marginLeft: idx > 0 ? "16px" : "0",
+                        position: "relative",
+                        animation: isSlidingOut
+                          ? "slideOutLeft 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards"
+                          : isSlidingIn
+                          ? "slideInRight 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards"
+                          : undefined,
+                        transition:
+                          !isSlidingOut && !isSlidingIn
+                            ? "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+                            : undefined,
+                        willChange:
+                          isSlidingOut || isSlidingIn
+                            ? "transform, opacity"
+                            : "auto",
+                      }}
+                    >
+                      <Image
+                        src={img}
+                        alt={`Carousel ${idx + 1}`}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Controls */}
-        <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8">
+        <div className="relative z-20  container mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
             {/* Social Media Icons */}
             <div className="flex items-center space-x-3 sm:space-x-4">
