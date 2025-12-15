@@ -75,7 +75,7 @@ const AdminBottomHeader = ({
         </div>
 
         {/* EduDashboard Text */}
-        <h1 className="text-lg sm:text-xl font-bold text-gray-900 mr-14">
+        <h1 className={`text-lg sm:text-xl font-bold text-gray-900 mr-14 ${!sidebarOpen ? 'hidden' : ''}`}>
           EduDashboard
         </h1>
 
